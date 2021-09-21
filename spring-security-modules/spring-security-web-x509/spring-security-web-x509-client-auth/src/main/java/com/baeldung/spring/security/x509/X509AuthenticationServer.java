@@ -1,5 +1,6 @@
 package com.baeldung.spring.security.x509;
 
+import jdk.nashorn.internal.parser.Token;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,16 +19,21 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class X509AuthenticationServer extends WebSecurityConfigurerAdapter {
     public static void main(String[] args) {
+        System.setProperty("javax.net.debug", "ssl");
         SpringApplication.run(X509AuthenticationServer.class, args);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        String t = TokenHelper.generateToken("tester");
+        System.out.println("atk: " + t);
         http.authorizeRequests().anyRequest().authenticated()
                 .and()
+          //      .httpBasic();
                 .x509()
                 .subjectPrincipalRegex("CN=(.*?)(?:,|$)")
                 .userDetailsService(userDetailsService());
+        System.out.println("end config");
     }
 
     @Bean
@@ -35,7 +41,7 @@ public class X509AuthenticationServer extends WebSecurityConfigurerAdapter {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                if (username.equals("Bob")) {
+                if (username.equals("Bob") || username.equals("testuser")) {
                     return new User(username, "", AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
                 }
                 throw new UsernameNotFoundException("User not found!");

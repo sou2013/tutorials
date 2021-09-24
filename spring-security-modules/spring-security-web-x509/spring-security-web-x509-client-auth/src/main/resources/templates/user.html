@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>X.509 Authentication Demo</title>
+        <title>Electron - P093 PKI-auth Demo</title>
     </head>
     <body>
         <h2>Hello <span th:text="${username}"/>!</h2>
+    P093 PKI-Authentication Proof of Concept<br>
+
+        <ul>
+            <li>Create Certificate Authority (CA) cert, self-signed server cert, and client cert.</li>
+            <li>Server side: Config Tomcat to use PKI authentication</li>
+            <li>Server side: Add server cert and private key to Tomcat keystore</li>
+            <li>Server side: Add CA cert to Tomcat truststore</li>
+            <li>Client side: Import client cert into browser</li>
+            <li>Access protected resource to trigger cert. prompt in browser</li>
+        </ul>
     </body>
 </html>
